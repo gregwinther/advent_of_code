@@ -13,7 +13,7 @@ for i in range(1, n):
     if data[i - 1] < data[i]:
         increased[i] = 1
 
-print(f"{sum(increased)} measurements are larger than the previous.")
+print(f"Measurements larger than the previous: {sum(increased)}")
 
 # Part 2: Three measurement sliding window
 
