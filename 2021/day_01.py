@@ -1,3 +1,5 @@
+import numpy as np
+
 # Part 1
 
 with open("./input_01.txt") as f:
@@ -15,6 +17,10 @@ for i in range(1, n):
 
 print(f"Measurements larger than the previous: {sum(increased)}")
 
+data_array = np.loadtxt("./input_01.txt", dtype=int)
+
+print(f"np oneliner: {np.sum(np.diff(data) > 0)}")
+
 # Part 2: Three measurement sliding window
 
 three_measurements_sum = []
@@ -28,3 +34,5 @@ for i in range(1, m):
         increased_three[i] = 1
 
 print(f"Number of increases in windows of 3: {sum(increased_three)}")
+
+print(f"np oneliner: {np.sum(np.diff(np.convolve(data_array, np.ones(3), mode='valid')) > 0)}")
