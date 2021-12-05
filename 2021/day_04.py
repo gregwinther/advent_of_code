@@ -16,14 +16,6 @@ boards = [
 boards = np.array(boards)
 marked = np.zeros_like(boards)
 
-## Testing
-# print(boards[:2])
-# marked_slice = (boards[:2] == 77).astype(int)
-# marked_slice += (boards[:2] == 24).astype(int)
-# print(marked_slice)
-# print(marked_slice.sum(axis=1)) # Dim: (board, colsum) 
-# print(marked_slice.sum(axis=2)) # Dim: (board, rowsum)
-
 winner = ""
 for i, number in enumerate(numbers):
     marked += (boards == number).astype(int)
@@ -39,10 +31,6 @@ for i, number in enumerate(numbers):
     if len(row_coords[0]) > 0: 
         winner=row_coords[0][0]
         break
-# print(i)
-# print(numbers[:i])
-# print(boards[winner])
-# print(marked[winner])
 
 ## Compute score
 winner_marked_inverse = np.logical_not(marked[winner]).astype(int)
