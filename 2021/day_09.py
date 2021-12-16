@@ -1,11 +1,10 @@
 import numpy as np
 from scipy.ndimage.filters import minimum_filter
-from scipy.ndimage.measurements import label, labeled_comprehension
+from scipy.ndimage.measurements import label
 from scipy.ndimage.morphology import (
     binary_erosion,
     generate_binary_structure,
 )
-from matplotlib import pyplot as plt
 
 with open("./input_09.txt", "r") as f:
     data = f.readlines()
