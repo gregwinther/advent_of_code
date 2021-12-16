@@ -1,19 +1,23 @@
 # Part 1
 
-test_data = [
-    "[({(<(())[]>[[{[]{<()<>>",
-    "[(()[<>])]({[<{<<[]>>(",
-    "{([(<{}[<>[]}>{[]{[(<()>",
-    "(((({<>}<{<{<>}{[]{[]{}",
-    "[[<[([]))<([[{}[[()]]]",
-    "[{[{({}]{}}([{[{{{}}([]",
-    "{<[[]]>}<{[{[{[]{()[[[]",
-    "[<(<(<(<{}))><([]([]()",
-    "<{([([[(<>()){}]>(<<{{",
-    "<{([{{}}[<[[[<>{}]]]>[]]",
-]
+# test_data = [
+#     "[({(<(())[]>[[{[]{<()<>>",
+#     "[(()[<>])]({[<{<<[]>>(",
+#     "{([(<{}[<>[]}>{[]{[(<()>",
+#     "(((({<>}<{<{<>}{[]{[]{}",
+#     "[[<[([]))<([[{}[[()]]]",
+#     "[{[{({}]{}}([{[{{{}}([]",
+#     "{<[[]]>}<{[{[{[]{()[[[]",
+#     "[<(<(<(<{}))><([]([]()",
+#     "<{([([[(<>()){}]>(<<{{",
+#     "<{([{{}}[<[[[<>{}]]]>[]]",
+# ]
+#
+# data = test_data
 
-data = test_data
+with open("./input_10.txt", "r") as f:
+    data = f.read().splitlines()
+
 
 start_brackets = "{([<"
 stop_brackets = "})]>"
@@ -38,8 +42,14 @@ def string_searcher(string):
         elif ch in stop_brackets:  # End of start. Removing from stack.
             popped = stack.pop()
             if stop_bracket_dict[ch] != popped:  # Match?
-                print(f"Expected {start_bracket_dict[popped]}, found {ch}")
+                # print(f"Expected {start_bracket_dict[popped]}, found {ch}")
+                return ch
 
 
-for i, line in enumerate(data):
-    string_searcher(line)
+score = 0
+for line in data:
+    ch = string_searcher(line)
+    if ch is not None:
+        score += syntax_error_scores[ch]
+
+print("Total syntax error score:", score)
