@@ -1,6 +1,10 @@
 import numpy as np
 from scipy.ndimage.filters import minimum_filter
-from scipy.ndimage.morphology import binary_erosion, generate_binary_structure
+from scipy.ndimage.measurements import label, labeled_comprehension
+from scipy.ndimage.morphology import (
+    binary_erosion,
+    generate_binary_structure,
+)
 from matplotlib import pyplot as plt
 
 with open("./input_09.txt", "r") as f:
@@ -25,28 +29,31 @@ data = np.array(data, dtype=int)
 ## IVAN's detect peaks function
 def detect_local_minima(data):
     neighborhood = generate_binary_structure(len(data.shape), 1)
-    local_min = (minimum_filter(data, footprint=neighborhood)==data)
-    background = (data==9)
+    local_min = minimum_filter(data, footprint=neighborhood) == data
+    background = data == 9
     eroded_background = binary_erosion(
         background, structure=neighborhood, border_value=1
     )
     detected_minima = local_min ^ eroded_background
     return np.where(detected_minima), detected_minima
 
+
 minima_coords, minima = detect_local_minima(data)
-# print("Minima coordinates:\n", minima_coords)
-# print("Minima values:\n", data[minima_coords])
 risk_levels = data[minima_coords] + 1
-# print("Risk levels:\n", risk_levels)
 print("Sum of risk levels:", risk_levels.sum())
 
-plt.figure()
-plt.imshow(data)
-plt.figure()
-plt.imshow(minima)
-plt.show()
 
 # Part 2
 ## Image analysis comtinues!
 
-basins = np.where(data != 9)
+basins = (data != 9).astype(int)
+
+neighborhood = generate_binary_structure(2, 1)
+labeled_basins, n_components = label(basins, neighborhood)
+
+sizes = [0] * n_components
+for i in range(n_components):
+    sizes[i] += (labeled_basins == i).sum()
+
+sizes = sorted(sizes)
+print("Product of largest basins:", sizes[-2] * sizes[-3] * sizes[-4])
