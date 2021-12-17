@@ -22,8 +22,9 @@ from scipy.signal import convolve2d
 with open("./input_11.txt", "r") as f:
     data = np.array([list(line) for line in f.read().splitlines()], dtype=int)
 
-n = 100
+n = 300
 flash_count = []
+all_flashed = []
 for i in range(n):
     mask = np.array([[1, 1, 1], [1, 0, 1], [1, 1, 1]])
     flashed = np.zeros(data.shape, dtype="bool")
@@ -31,7 +32,11 @@ for i in range(n):
     while np.any(flashing := data > 9):
         flashed |= flashing
         data += convolve2d(flashing, mask, mode="same")
+        if flashed.sum() == np.prod(data.shape):
+            all_flashed.append(i + 1)
         data[flashed] = 0
     flash_count.append(flashed.sum())
 
 print(f"Number of flashed octopi over {n} cycles; {sum(flash_count)}")
+print("All octipi flashed after cycles")
+print(all_flashed)
