@@ -38,5 +38,5 @@ for i in range(n):
     flash_count.append(flashed.sum())
 
 print(f"Number of flashed octopi over {n} cycles; {sum(flash_count)}")
-print("All octipi flashed after cycles")
+print("All octopi flashed after cycles")
 print(all_flashed)
