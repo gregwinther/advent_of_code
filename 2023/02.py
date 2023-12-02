@@ -47,6 +47,7 @@ for id, gamespecs in game_dict.items():
         "red": max(red),
     }
 
+## Part II
 
 # What games would be possible if the bag contained 
 # only 12 red cubes, 13 green cubes, and 14 blue cubes?
@@ -67,3 +68,16 @@ for id, max_val_dict in max_cube_counts.items():
         allowed_games.append(id)
 
 print("Sum of allowed games: ", sum(allowed_games))
+
+## Part II 
+
+from functools import reduce
+
+# What is the fewest number of cubes of each color that could be
+# in the bag to make the possible?
+
+game_cube_power = {}
+for id, max_val_dict in max_cube_counts.items():
+    game_cube_power[id] = reduce(lambda x, y: x*y, max_val_dict.values())
+
+print("Sum of power of all games:", sum(game_cube_power.values()))
