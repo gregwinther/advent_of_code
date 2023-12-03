@@ -44,3 +44,10 @@ for i, row in enumerate(lines):
             symbols[coords].append(int(dig.group()))
 
 print("Part numbers sum: ", sum([sum(sym) for sym in symbols.values()]))
+
+## Part II
+from math import prod
+print(
+    "Sum of gear ratios: ",
+    sum([prod(sym) for sym in symbols.values() if len(sym) == 2])
+)
