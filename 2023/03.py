@@ -1,5 +1,4 @@
 import re
-import pandas as pd
 
 ## Part I
 
@@ -16,75 +15,32 @@ import pandas as pd
 # 
 # lines = test_data.split("\n")
 
-with open("./input03.txt") as f:
-    lines = f.readlines()
+lines = list(open("./input03.txt"))
 
-    matrix = []
-for line in lines:
-    matrix.append(list(line))
+N = len(lines[0]) - 1 # Width (x-coords). Remove line change char.
+M = len(lines) # Height (y-coords) 
 
-directions = [
-    [-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]
-]
+# Create dict[coords]: []
+# coords are limited to where not digits or .
+# Coordinates of special symbols and part
+# numbers associated with them in list.
+symbols = dict()
+for x in range(N):
+    for y in range(M):
+        symbol = lines[y][x]
+        if lines[y][x] not in "0123456789.":
+            symbols[(x, y)] = []
 
-N = len(matrix[0]) # Width (x-axis)
-M = len(matrix) # Height 
+# Run through cols
+for i, row in enumerate(lines):
+    # find all numbers in col
+    for dig in re.finditer(r"\d+", row):
+        # Coordinates of number
+        search_area = {(x, y) for x in range(dig.start() - 1, dig.end() + 1) for y in [i - 1, i, i + 1]}
+        # print(search_area & symbols.keys())
+        # Mask search area with allowed areas, i.e. "not_digits"
+        # store found number in symbols dict
+        for coords in search_area & symbols.keys():
+            symbols[coords].append(int(dig.group()))
 
-numbers = []
-number_coords = []
-for y in range(M):
-    for x in range(N):
-        symbol = matrix[y][x]
-        # Not a digit, not "." 
-        if re.match("\D", symbol) and symbol != ".":
-
-            prev_number_start_index = 0
-            prev_number_end_index = 0
-            prev_check_y = 0
-
-            # Check in all directions for numbers
-            for dir in directions:
-                dx, dy = dir
-                check_x, check_y = x + dx, y + dy
-
-                # Don't check for same again.
-                if check_y == prev_check_y and prev_number_start_index <= check_x <= prev_number_end_index:
-                    continue
-
-                # Make sure we are not checking outside of matrix
-                if 0 <= check_x < N and 0 <= check_y < M:
-                    check_symbol = matrix[check_y][check_x]
-
-                    # is digit?
-                    if re.match(r"\d", check_symbol):
-                        ## Look for full number
-                        
-                        # Find start
-                        number_start_index = check_x
-                        while number_start_index > 0:
-                            if re.match(r"\d", matrix[check_y][number_start_index - 1]):
-                                number_start_index -= 1
-                            else:
-                                break
-
-                        # Find end
-                        number_end_index = check_x
-                        while number_end_index < N - 1:
-                            if re.match(r"\d", matrix[check_y][number_end_index + 1]):
-                                number_end_index += 1
-                            else:
-                                break
-
-                        prev_number_start_index = number_start_index
-                        prev_number_end_index = number_end_index
-                        prev_check_y = check_y
-
-                        number = int("".join(matrix[check_y][number_start_index:number_end_index + 1]))
-                        
-                        numbers.append(number)
-                        number_coords.append(f"{number_start_index}_{check_y}")
-
-# I count some things several time..
-df = pd.DataFrame({"coords": number_coords, "number": numbers})
-
-print("Sum of numbers: ", df.drop_duplicates(subset="coords")["number"].sum())
+print("Part numbers sum: ", sum([sum(sym) for sym in symbols.values()]))
