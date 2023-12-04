@@ -16,17 +16,19 @@ with open("./input04.txt") as f:
 
 game_points = {}
 for i, line in enumerate(lines):
-    line = re.sub(r"Card \d+: ", "", line)
-    winning_numbers, your_numbers = line.split("|")
+    line_ = re.sub(r"Card[ ]{1,3}\d+: ", "", line)
+    winning_numbers, your_numbers = line_.split("|")
     winning_numbers = re.findall(r"\d{1,2}", winning_numbers)
     your_numbers = re.findall(r"\d{1,2}", your_numbers)
-    winning_numbers = set(map(int, winning_numbers))
     your_numbers = set(map(int, your_numbers))
-    wins = your_numbers & winning_numbers
-    n_wins = len(wins)
-    if n_wins > 0: 
-        game_points[i] = 2**(n_wins - 1)
+    winning_numbers = set(map(int, winning_numbers))
+    matches = your_numbers & winning_numbers
+    n_matches = len(matches)
+    if n_matches > 0: 
+        points = 2**(n_matches - 1)
     else:
-        game_points[i] = 0
+        points = 0
+
+    game_points[i] = points
 
 print("Total points: ", sum(game_points.values()))
