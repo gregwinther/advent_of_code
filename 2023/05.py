@@ -61,7 +61,11 @@ class AlmanacMap():
         else:
             return n
 
+# Part One
 seeds = list(map(int, lines[0].split(" ")[1:]))
+# Part Two - Does not work. Too many!
+# seeds = [list(range(seeds[i], seeds[i] + seeds[i+1])) for i in range(0, len(seeds), 2)]
+# seeds = [elem for guy in seeds for elem in guy]
 
 n = len(lines)
 maps = {}
