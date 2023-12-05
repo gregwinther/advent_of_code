@@ -79,7 +79,6 @@ for i, line in enumerate(lines):
         for k in range (i + 1, map_end + 1):
             dest, source, range_len = re.findall(r"\d+", lines[k])
             dest, source, range_len = int(dest), int(source), int(range_len)
-            # maps[map_name].append({k: v for k, v in zip(range(source, source + range_len), range(dest, dest + range_len))})
             maps[map_name].add_map(dest, source, range_len)
 
 location_numbers = []
