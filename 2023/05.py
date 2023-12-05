@@ -1,4 +1,5 @@
 import re
+from typing import Any
 
 # test_input = """seeds: 79 14 55 13
 # 
@@ -39,6 +40,26 @@ import re
 
 with open("./input05.txt") as f:
     lines = f.readlines()
+lines = list(map(lambda x: x.replace("\n", ""), lines))
+
+class AlmanacMap():
+
+    def __init__(self) -> None:
+        self.source = []
+        self.dest = []
+        self.range_len = []
+
+    def add_map(self, dest, source, range_len):
+        self.source.append(source)
+        self.dest.append(dest)
+        self.range_len.append(range_len)
+
+    def __call__(self, n) -> Any:
+        for s, d, r in zip(self.source, self.dest, self.range_len):
+            if n in range(s, s + r):
+                return d + (n - s)
+        else:
+            return n
 
 seeds = list(map(int, lines[0].split(" ")[1:]))
 
@@ -54,61 +75,22 @@ for i, line in enumerate(lines):
             if len(lines[j]) <= 1:
                 map_end = j - 1
                 break
-        
-        maps[map_name] = []
+        maps[map_name] = AlmanacMap()
         for k in range (i + 1, map_end + 1):
             dest, source, range_len = re.findall(r"\d+", lines[k])
             dest, source, range_len = int(dest), int(source), int(range_len)
-            maps[map_name].append({k: v for k, v in zip(range(source, source + range_len), range(dest, dest + range_len))})
-
-# Merge the dicts in the maps
-for map_name in maps:
-    merged_dict = {}
-    for d in maps[map_name]:
-        for k, v in d.items():
-            merged_dict[k] = v
-    maps[map_name] = merged_dict
-
-# Note: Any source numbers that aren't mapped correspond to the same destination number.
+            # maps[map_name].append({k: v for k, v in zip(range(source, source + range_len), range(dest, dest + range_len))})
+            maps[map_name].add_map(dest, source, range_len)
 
 location_numbers = []
 for seed in seeds:
-    if seed not in maps["seed-to-soil"]:
-        soil = seed
-    else:
-        soil = maps["seed-to-soil"][seed]
-
-    if soil not in maps["soil-to-fertilizer"]:
-        fertilizer = soil
-    else:
-        fertilizer = maps["soil-to-fertilizer"][soil]
-
-    if fertilizer not in maps["fertilizer-to-water"]:
-        water = fertilizer
-    else:
-        water = maps["fertilizer-to-water"][fertilizer]
-    
-    if water not in maps["water-to-light"]:
-        light = water
-    else:
-        light = maps["water-to-light"][water]
-
-    if light not in maps["light-to-temperature"]:
-        temperature = light
-    else:
-        temperature = maps["light-to-temperature"][light]
-
-    if temperature not in maps["temperature-to-humidity"]:
-        humidity = temperature
-    else:
-        humidity = maps["temperature-to-humidity"][temperature]
-
-    if humidity not in maps["humidity-to-location"]:
-        location = humidity
-    else:
-        location = maps["humidity-to-location"][humidity]
-
-    # print(seed, soil, fertilizer, water, light, temperature, humidity, location)
+    soil = maps["seed-to-soil"](seed)
+    fertilizer = maps["soil-to-fertilizer"](soil)
+    water = maps["fertilizer-to-water"](fertilizer)
+    light = maps["water-to-light"](water)
+    temperature = maps["light-to-temperature"](light)
+    humidity = maps["temperature-to-humidity"](temperature)
+    location = maps["humidity-to-location"](humidity)
 
     location_numbers.append(location)
 
