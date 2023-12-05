@@ -60,12 +60,17 @@ class AlmanacMap():
                 return d + (n - s)
         else:
             return n
+        
+    def backwards(self, n) -> int:
+        for s, d, r in zip(self.source, self.dest, self.range_len):
+            if n in range(d, d + r):
+                return s + (n - d)
+        else:
+            return n
+ 
 
 # Part One
 seeds = list(map(int, lines[0].split(" ")[1:]))
-# Part Two - Does not work. Too many!
-# seeds = [list(range(seeds[i], seeds[i] + seeds[i+1])) for i in range(0, len(seeds), 2)]
-# seeds = [elem for guy in seeds for elem in guy]
 
 n = len(lines)
 maps = {}
@@ -98,3 +103,33 @@ for seed in seeds:
     location_numbers.append(location)
 
 print("Lowest location number: ", min(location_numbers))
+
+## Part Two
+
+def find_seed_number(location):
+    humidity = maps["humidity-to-location"].backwards(location)
+    temperature = maps["temperature-to-humidity"].backwards(humidity)
+    light = maps["light-to-temperature"].backwards(temperature)
+    water = maps["water-to-light"].backwards(light)
+    fertilizer = maps["fertilizer-to-water"].backwards(water)
+    soil = maps["soil-to-fertilizer"].backwards(fertilizer)
+    seed = maps["seed-to-soil"].backwards(soil)
+
+    return seed
+
+def is_valid_seed(soil):
+    for i in range(0, len(seeds), 2):
+        if seeds[i] <= soil < seeds[i] + seeds[i+1]:
+            return True
+    return False
+
+# Start at zero. Stop when finding a valid seed number
+location_number = -1
+valid_seed = False 
+while not valid_seed:
+    location_number += 1 
+    seed = find_seed_number(location_number)
+    print(location_number, end="\r")
+    valid_seed = is_valid_seed(seed)
+
+print("Lowest location number corresponding to valid seed: ", location_number)
