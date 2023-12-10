@@ -18,10 +18,11 @@ for line in raw.split("\n"):
     nodes[key] = {"L": left, "R": right}
 
 directions = cycle(directions) # Amazing trick!!
-position = "AAA"
-for i, dir in enumerate(directions):
-    if position == "ZZZ":
-        break
-    position = nodes[position][dir]
 
-print("Steps: ", i)
+def solve(position = "AAA"): 
+    for i, dir in enumerate(directions):
+        if position[-1] == "Z":
+            return i
+        position = nodes[position][dir]
+
+print("Steps: ", solve("AAA"))
