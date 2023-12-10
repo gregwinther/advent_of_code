@@ -21,11 +21,22 @@ for line in lines:
     hands.append(hand)
     bets.append(int(bet))
 
+# Note: the most efficient use of jokers is always as the
+# most common non-joker card ;) 
+
 hand_data = []
 for hand, bet in zip(hands, bets):
     hand_stats = Counter(hand)
 
-    counts = list(hand_stats.values())
+    # Part 2
+    jokers = hand_stats.pop("J", 0)
+    if jokers == 5:
+        counts = [0]
+    else:
+        counts = sorted(hand_stats.values())
+    
+    counts[-1] += jokers
+
     score = 1
     if 5 in counts:
         score = 7
