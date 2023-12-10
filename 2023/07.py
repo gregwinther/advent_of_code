@@ -21,9 +21,8 @@ for line in lines:
     hands.append(hand)
     bets.append(int(bet))
 
-hand_type = []
-card_values = []
-for hand in hands:
+hand_data = []
+for hand, bet in zip(hands, bets):
     hand_stats = Counter(hand)
 
     counts = list(hand_stats.values())
@@ -41,15 +40,13 @@ for hand in hands:
     elif 2 in counts:
         score = 2
 
-    hand_type.append(score)
-    card_values.append(list(map("*23456789TJQKA".index, hand)))
+    hand_data.append((score, *map("*23456789TJQKA".index, hand), bet)) 
 
-scores = [(ht, cv) for ht, cv in zip(hand_type, card_values)]
-sorted_scores = sorted(enumerate(scores), key=lambda x: x[1])
-ranks = [i + 1 for i, _ in sorted_scores]
+
+sorted_hand_data = sorted(hand_data)
 
 winnings = 0
-for rank, bet in zip(ranks, bets):
-    winnings += rank * bet
+for rank, (*_, bet) in enumerate(sorted_hand_data):
+    winnings += (rank + 1) * bet
 
-print("Total winnings: ", winnings)
+print("Winnings: ", winnings)
