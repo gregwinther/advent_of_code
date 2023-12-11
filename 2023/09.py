@@ -1,4 +1,3 @@
-import re
 import numpy as np
 
 test_input = """0 3 6 9 12 15
@@ -13,7 +12,7 @@ with open("./input09.txt") as f:
 
 lines = []
 for line in puzzle_input.split("\n"):
-    numbers = [int(number) for number in re.findall(r"\d+", line)]
+    numbers = [int(number) for number in line.split()]
     lines.append(numbers)
 
 extr_numbers = []
@@ -31,4 +30,3 @@ for line in lines:
     extr_numbers.append(extr_number)
 
 print("Sum of extrapolated values: ", sum(extr_numbers)) 
-
