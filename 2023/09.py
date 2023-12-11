@@ -16,6 +16,7 @@ for line in puzzle_input.split("\n"):
     lines.append(numbers)
 
 extr_numbers = []
+extr_numbers2 = []
 for line in lines:
     pyramid = [] 
     steps = line.copy()
@@ -24,9 +25,13 @@ for line in lines:
         steps = list(np.diff(steps))
 
     extr_number = 0
+    extr_number2 = 0
     for layer in pyramid[::-1]:
         extr_number += layer[-1]
+        extr_number2 = layer[0] - extr_number2 
 
     extr_numbers.append(extr_number)
+    extr_numbers2.append(extr_number2)
 
-print("Sum of extrapolated values: ", sum(extr_numbers)) 
+print("Sum of extrapolated values (part one): ", sum(extr_numbers)) 
+print("Sum of extrapolated values (part two): ", sum(extr_numbers2))
