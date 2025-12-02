@@ -5,25 +5,31 @@ with open(filepath, "r") as f:
 
 lines = [(line[0], int(line[1:].strip())) for line in lines]
 
-# print(lines)
-
 dial = 50
 zero_counter = 0
-# print(dial)
 
 for dir, num in lines:
     if dir == "R":
-        dial += num
+        zero_counter += (dial + num) // 100
+        dial = (dial + num) % 100
     elif dir == "L":
-        dial -= num
+        new_dial = (dial - num) % 100
 
-    if dial < 0:
-        dial = 100 + dial
+        # Started at zero
+        if dial == 0:
+            zero_counter += num // 100
+        # Cross zero at least once
+        elif num > dial:
+            zero_counter += ((num - dial - 1) // 100) + 1
+            # Count final if stops on 0
+            if new_dial == 0:
+                zero_counter += 1
+        # Land on 0?
+        elif num == dial:
+            zero_counter += 1
 
-    dial = dial % 100
-    
-    if dial == 0:
-        zero_counter += 1
+        # Else: num < dial. zero not reached.
 
-    # print(dir, num, dial)
+        dial = new_dial
+
 print("Zeros: ", zero_counter) 
