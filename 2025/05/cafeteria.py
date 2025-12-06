@@ -27,3 +27,19 @@ for ingredient in ingredients:
             break
 
 print("No of valid ingredients:", len(list(fresh_ingredients)))
+
+# Part 2: How many numbers are in the ranges (inclusive)?
+# Merge overlapping ranges and count unique numbers
+id_ranges.sort() # This works!!! ??!?
+merged_ranges = []
+for start, stop in id_ranges:
+    # None yet or no overlap
+    if not merged_ranges or merged_ranges[-1][1] < start - 1:
+        merged_ranges.append([start, stop])
+    else:
+        merged_ranges[-1][1] = max(merged_ranges[-1][1], stop)
+total_count = 0
+for start, stop in merged_ranges:
+    total_count += (stop - start + 1)
+
+print("Total number of valid ingredients:", total_count)
